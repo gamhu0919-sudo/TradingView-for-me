@@ -16,7 +16,7 @@ if not exist ".venv\Scripts\python.exe" (
     if errorlevel 1 goto :nopython
 )
 
-".venv\Scripts\python.exe" -c "import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)"
+".venv\Scripts\python.exe" -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)"
 if errorlevel 1 goto :oldpython
 
 echo [2/3] Installing packages...
@@ -38,14 +38,14 @@ exit /b 0
 
 :nopython
 echo.
-echo Python was not found. Install Python 3.12 from https://www.python.org/downloads/
+echo Python was not found. Install Python 3.10 or newer from https://www.python.org/downloads/
 echo and check "Add python.exe to PATH" during installation.
 pause
 exit /b 1
 
 :oldpython
 echo.
-echo Python 3.11 or newer is required. Install Python 3.12, delete the .venv folder and run setup again.
+echo Python 3.10 or newer is required. Install a newer Python, delete the .venv folder and run setup again.
 pause
 exit /b 1
 

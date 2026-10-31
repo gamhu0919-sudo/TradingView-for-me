@@ -4,7 +4,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from enum import StrEnum
+from enum import Enum
+
+
+class StrEnum(str, Enum):
+    """Python 3.10 호환용 (enum.StrEnum은 3.11부터). 문자열로 쓰면 값이 나온다."""
+
+    def __str__(self) -> str:
+        return self.value
+
+    def __format__(self, spec: str) -> str:
+        return format(self.value, spec)
 
 
 class AssetType(StrEnum):

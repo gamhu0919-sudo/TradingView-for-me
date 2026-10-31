@@ -1,6 +1,6 @@
 # 내 PC를 서버로 쓰기 (Windows)
 
-클라우드 서버 대신, 항상 켜져 있는 Windows PC에서 봇을 돌리는 방법입니다. 처음 설정은 20~30분 정도 걸립니다.
+클라우드 서버 대신, 항상 켜져 있는 Windows PC에서 봇을 돌리는 방법입니다. 처음 설정은 20~30분 정도 걸리고, Python 3.10 이상이 필요합니다.
 
 ## 먼저 알아둘 점
 
@@ -15,24 +15,44 @@
 
 [클라우드 가이드의 1단계](DEPLOY.md#1단계-텔레그램-봇-만들기-5분)와 같습니다. BotFather에서 받은 **토큰**을 준비하세요.
 
-## 2. 프로그램 2개 설치
+## 2. Python 확인
 
-1. **Python 3.12**: <https://www.python.org/downloads/> 에서 받습니다.
-   - 설치 첫 화면에서 **"Add python.exe to PATH"를 반드시 체크**한 뒤 Install Now를 누릅니다.
-2. **Git**: <https://git-scm.com/download/win> 에서 받습니다. 설치 옵션은 모두 기본값 그대로 두면 됩니다.
+**Python 3.10 이상**이면 됩니다. 이미 3.10이 설치돼 있다면 새로 설치할 필요가 없고, 아래처럼 '명령어로 실행되는지'만 확인하면 됩니다.
 
-## 3. 코드 받기
+1. 키보드의 **Windows 키**를 누르고 `cmd` 를 입력한 뒤 **명령 프롬프트**를 엽니다. 검은 창이 뜹니다.
+2. 아래를 입력하고 Enter를 누릅니다.
+   ```
+   py --version
+   ```
+3. 결과에 따라 이렇게 합니다.
+   - **`Python 3.10.x` 처럼 버전이 나오면 끝입니다.** 3단계로 넘어가세요.
+   - `'py'은(는) 내부 또는 외부 명령... 이 아닙니다` 가 나오면 `python --version` 을 입력해 봅니다. 여기서 버전이 나와도 끝입니다.
+   - 둘 다 안 되거나 Microsoft Store가 열리면 **PATH 설정**이 필요합니다(아래).
 
-시작 메뉴에서 **명령 프롬프트**(cmd)를 열고 아래를 붙여넣습니다.
+### PATH 설정이란?
 
-```bat
-cd /d C:\
-git clone https://github.com/gamhu0919-sudo/TradingView-for-me.git portfolio-bot
-```
+PATH는 Windows가 `python` 같은 명령어를 입력받았을 때 **프로그램을 찾아볼 폴더 목록**입니다. Python 폴더가 이 목록에 없으면 Python이 설치돼 있어도 명령 프롬프트가 찾지 못합니다. Python 설치 프로그램의 **"Add python.exe to PATH"** 체크박스가 바로 이 목록에 Python 폴더를 추가하는 옵션입니다.
 
-`C:\portfolio-bot` 폴더가 생깁니다. 한글이나 공백이 없는 경로가 가장 안전합니다.
+이미 설치된 Python에 PATH를 추가하려면:
 
-> 나중에 저장소를 비공개로 바꾸면, 처음 `git clone`이나 업데이트할 때 GitHub 로그인 창이 한 번 뜹니다. 로그인하면 그 뒤로는 자동입니다.
+1. **설정 → 앱 → 설치된 앱**(Windows 10은 '앱 및 기능')에서 **Python 3.10.x** 를 찾습니다.
+2. 오른쪽 **⋯** 버튼(또는 항목 클릭) → **수정** 을 누릅니다. Python 설치 창이 열립니다.
+3. **Modify** → **Next** 를 누릅니다.
+4. **Advanced Options** 화면에서 **"Add Python to environment variables"** 를 체크하고 **Install** 을 누릅니다.
+5. 열려 있던 명령 프롬프트를 **닫고 새로 연 뒤** `python --version` 으로 다시 확인합니다.
+
+## 3. 코드 받기 (ZIP 다운로드)
+
+Git(코드를 내려받고 업데이트하는 개발자용 프로그램)은 **설치하지 않아도 됩니다.** 웹브라우저에서 ZIP 파일로 받으면 됩니다.
+
+1. <https://github.com/gamhu0919-sudo/TradingView-for-me> 에 들어가 초록색 **Code** 버튼 → **Download ZIP** 을 누릅니다.
+2. 다운로드된 `TradingView-for-me-main.zip` 을 **오른쪽 클릭 → 속성** → 아래쪽 **"차단 해제"** 체크 → **확인**.
+   (인터넷에서 받은 파일이라 이걸 안 하면 실행할 때 "Windows의 PC 보호" 경고가 뜹니다. 그때는 **추가 정보 → 실행** 을 누르면 됩니다.)
+3. ZIP을 **오른쪽 클릭 → 압축 풀기** 를 누르고 대상 폴더를 `C:\` 로 지정합니다.
+4. 생긴 `C:\TradingView-for-me-main` 폴더 이름을 **`portfolio-bot`** 으로 바꿉니다.
+5. `C:\portfolio-bot\scripts\windows\setup.bat` 파일이 있으면 제대로 된 것입니다.
+
+> 나중에 저장소를 비공개로 바꿔도, 브라우저에서 GitHub에 로그인돼 있으면 같은 방법으로 받을 수 있습니다.
 
 ## 4. 설치 스크립트 실행
 
@@ -76,7 +96,7 @@ git clone https://github.com/gamhu0919-sudo/TradingView-for-me.git portfolio-bot
 |---|---|
 | 봇 중지 | `stop_bot.bat` |
 | 봇 다시 시작 | `install_autostart.bat` (다시 실행해도 괜찮음) |
-| 최신 코드로 업데이트 | `update.bat` (중지, 업데이트, 재시작을 한 번에) |
+| 최신 코드로 업데이트 | ① `stop_bot.bat` 실행 ② 새 ZIP을 받아 압축을 풀고, 나온 폴더 안의 파일을 모두 `C:\portfolio-bot` 에 붙여넣기(덮어쓰기) ③ `update.bat` 실행. `.env` 와 `data` 폴더는 ZIP에 없어서 그대로 유지됩니다 |
 | 로그 보기 | `open_log.bat` (`data\bot.log`) |
 | 자동 시작 해제 | `uninstall_autostart.bat` |
 
@@ -88,7 +108,7 @@ git clone https://github.com/gamhu0919-sudo/TradingView-for-me.git portfolio-bot
 
 | 증상 | 확인할 것 |
 |---|---|
-| `setup.bat` 에서 "Python was not found" | Python을 다시 설치하면서 **Add python.exe to PATH** 를 체크했는지 |
+| `setup.bat` 에서 "Python was not found" | 2단계의 **PATH 설정**을 했는지 |
 | 정기 알림이 안 옴 | PC가 절전 모드에 들어가지 않았는지, `open_log.bat` 로그에 오류가 있는지 |
 | 로그에 `Conflict` 오류 | 다른 곳(클라우드 서버 등)에서 같은 봇이 실행 중인지 |
 | 봇이 응답하지 않음 | `.env` 의 토큰과 chat_id가 맞는지 확인한 뒤 `install_autostart.bat` 를 다시 실행 |
