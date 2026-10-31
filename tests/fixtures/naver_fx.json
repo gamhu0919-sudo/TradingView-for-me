@@ -1,0 +1,47 @@
+{
+ "isSuccess": true,
+ "result": {
+  "stockExchangeType": {
+   "code": "HANA",
+   "zoneId": "Asia/Seoul",
+   "nationType": "KOR",
+   "delayTime": 0,
+   "startTime": "",
+   "endTime": "",
+   "closePriceSendTime": "",
+   "nameKor": "하나은행",
+   "nameEng": "Hana Bank",
+   "nationName": "대한민국",
+   "stockType": "domestic",
+   "nationCode": "KOR",
+   "name": "HANA"
+  },
+  "categoryType": "exchange",
+  "reutersCode": "FX_USDKRW",
+  "symbolCode": "USD",
+  "exchangeCode": "USD",
+  "name": "미국 USD",
+  "fullName": null,
+  "description": "하나은행 고시회차",
+  "localTradedAt": "2026-10-31T06:02:22+09:00",
+  "closePrice": "1,335.80",
+  "fluctuations": "-4.70",
+  "fluctuationsRatio": "-0.35",
+  "fluctuationsType": {
+   "code": "5",
+   "text": "하락",
+   "name": "FALLING"
+  },
+  "marketStatus": "OPEN",
+  "priceDataType": "NOTICE_ROUND",
+  "endUrl": "https://m.stock.naver.com/marketindex/exchange/FX_USDKRW",
+  "newPcUrl": "https://stock.naver.com/marketindex/exchange/FX_USDKRW",
+  "unit": "KRW",
+  "degreeCount": 1358,
+  "calcPrice": "1335.8",
+  "marketIndexCdList": [
+   "FX_USDKRW",
+   "FX_USDKRW_SHB"
+  ]
+ }
+}
