@@ -52,7 +52,7 @@ sudo usermod -aG docker $USER
 여기서 **SSH 창을 닫고 다시 엽니다**(docker 권한 적용). 그다음:
 
 ```bash
-# 3) 코드 받기
+# 3) 코드 받기 (공개 저장소인 경우)
 git clone https://github.com/gamhu0919-sudo/TradingView-for-me.git
 cd TradingView-for-me
 
@@ -60,6 +60,27 @@ cd TradingView-for-me
 cp .env.example .env
 nano .env
 ```
+
+> **저장소가 비공개라면** 위의 `git clone` 대신 아래 순서로 받습니다. 서버에 **읽기 전용 배포 키(Deploy key)** 를 등록하는 방식입니다. 이 키로는 이 저장소 하나만, 그것도 읽기만 할 수 있습니다.
+>
+> ```bash
+> ssh-keygen -t ed25519 -C "portfolio-bot" -f ~/.ssh/id_ed25519 -N ""
+> cat ~/.ssh/id_ed25519.pub        # 출력된 한 줄(ssh-ed25519 ...)을 복사
+> ```
+>
+> 1. GitHub 저장소 → **Settings → Deploy keys → Add deploy key**
+> 2. Title은 `portfolio-bot`으로 하고, Key에 복사한 줄을 붙여넣습니다. **Allow write access는 체크하지 않습니다.**
+> 3. 서버로 돌아와 아래를 실행합니다.
+>
+> ```bash
+> ssh -o StrictHostKeyChecking=accept-new -T git@github.com   # "successfully authenticated" 가 나오면 성공
+> git clone git@github.com:gamhu0919-sudo/TradingView-for-me.git
+> cd TradingView-for-me
+> cp .env.example .env
+> nano .env
+> ```
+>
+> 이후 `git pull` 업데이트도 같은 키로 동작합니다.
 
 `nano` 편집기에서 `TELEGRAM_BOT_TOKEN=` 뒤에 1단계에서 받은 토큰을 붙여넣습니다. `Ctrl+O`, `Enter`로 저장하고 `Ctrl+X`로 나옵니다.
 
