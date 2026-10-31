@@ -31,7 +31,7 @@ from telegram.ext import (
 )
 
 from . import schedules
-from .config import Settings
+from .config import Settings, save_env_value
 from .market import KST, now_kst
 from .market_data import MarketData
 from .models import AssetType, Holding, Instrument
@@ -536,12 +536,20 @@ class PortfolioBot:
 
 
 async def _setup_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = update.effective_chat.id
-    await update.effective_message.reply_text(
-        f"설정 모드입니다.\n이 대화의 chat_id: <code>{chat_id}</code>\n\n"
-        f".env 파일에 <code>TELEGRAM_CHAT_ID={chat_id}</code> 를 넣고 봇을 재시작하세요.",
-        parse_mode=ParseMode.HTML,
-    )
+    """설정 모드: 처음 [시작]을 누른 개인 대화를 봇 주인으로 등록하고 일반 모드로 전환한다."""
+    chat = update.effective_chat
+    if chat is None or chat.type != "private" or context.bot_data.get("registered_chat_id"):
+        return
+    if save_env_value(".env", "TELEGRAM_CHAT_ID", str(chat.id)):
+        text = "✅ 이 대화를 봇 주인으로 등록했습니다. 잠시 후 환영 메시지와 사용법이 옵니다."
+    else:
+        text = (f"✅ 등록했습니다 (chat_id: <code>{chat.id}</code>).\n"
+                f"설정 파일에 저장하지 못했으니, 재시작 후에도 유지하려면 .env 에 "
+                f"<code>TELEGRAM_CHAT_ID={chat.id}</code> 를 넣어 주세요.")
+    log.info("봇 주인 등록: chat_id=%s", chat.id)
+    await update.effective_message.reply_text(text, parse_mode=ParseMode.HTML)
+    context.bot_data["registered_chat_id"] = chat.id
+    context.application.stop_running()
 
 
 def build_application(settings: Settings) -> Application:
@@ -566,10 +574,19 @@ def build_application(settings: Settings) -> Application:
         await data.aclose()
         store.close()
 
-    app = ApplicationBuilder().token(settings.bot_token).post_init(post_init).post_shutdown(post_shutdown).build()
+    # 기본 대기시간(5초)은 느린 가정용 회선에서 텔레그램 연결이 시간 초과로 끝날 수 있어 넉넉히 늘린다
+    app = (
+        ApplicationBuilder()
+        .token(settings.bot_token)
+        .connect_timeout(20).read_timeout(30).write_timeout(30).pool_timeout(10)
+        .get_updates_connect_timeout(20).get_updates_read_timeout(40)
+        .post_init(post_init)
+        .post_shutdown(post_shutdown)
+        .build()
+    )
 
     if settings.chat_id is None:
-        log.warning("TELEGRAM_CHAT_ID 미설정: 설정 모드로 실행합니다. 봇에게 /start 를 보내세요.")
+        log.warning("TELEGRAM_CHAT_ID 미설정: 설정 모드입니다. 휴대폰 텔레그램에서 봇에게 [시작]을 누르면 자동 등록됩니다.")
         app.add_handler(CommandHandler("start", _setup_start))
         return app
 

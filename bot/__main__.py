@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import asyncio
+import dataclasses
 import html
 import logging
 import os
@@ -108,8 +109,15 @@ def main() -> None:
 
     from .telegram_bot import build_application
 
+    # bootstrap_retries=-1: 시작할 때 텔레그램 연결에 실패해도 종료하지 않고 계속 재시도
+    polling = {"allowed_updates": ["message", "callback_query"], "bootstrap_retries": -1, "close_loop": False}
     try:
-        build_application(settings).run_polling(allowed_updates=["message", "callback_query"])
+        app = build_application(settings)
+        app.run_polling(**polling)
+        registered = app.bot_data.get("registered_chat_id")
+        if settings.chat_id is None and registered:
+            # 설정 모드에서 주인이 등록되면 재시작 없이 바로 일반 모드로 전환
+            build_application(dataclasses.replace(settings, chat_id=registered)).run_polling(**polling)
     finally:
         lock.close()
 
