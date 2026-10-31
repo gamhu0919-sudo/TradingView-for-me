@@ -13,7 +13,7 @@ def load_dotenv(path: str | Path = ".env") -> None:
     p = Path(path)
     if not p.is_file():
         return
-    for raw in p.read_text(encoding="utf-8").splitlines():
+    for raw in p.read_text(encoding="utf-8-sig").splitlines():  # 메모장이 붙이는 BOM 허용
         line = raw.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
@@ -44,6 +44,7 @@ class Settings:
     alert_quiet_hours: tuple[time, time] | None
     alert_interval_min: int
     log_level: str
+    log_file: Path | None = None
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -56,4 +57,5 @@ class Settings:
             alert_quiet_hours=parse_time_range(os.environ.get("ALERT_QUIET_HOURS", "00:00-07:00")),
             alert_interval_min=max(1, int(os.environ.get("ALERT_INTERVAL_MIN", "5"))),
             log_level=os.environ.get("LOG_LEVEL", "INFO").upper(),
+            log_file=Path(os.environ["LOG_FILE"]) if os.environ.get("LOG_FILE") else None,
         )

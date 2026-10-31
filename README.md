@@ -102,7 +102,8 @@
 
 ## 설치
 
-클라우드 서버에 설치하는 방법은 **[docs/DEPLOY.md](docs/DEPLOY.md)** 에 단계별로 정리돼 있습니다 (Google Cloud 무료 서버 기준, Oracle Cloud 대안 포함).
+- **클라우드 서버:** [docs/DEPLOY.md](docs/DEPLOY.md). Google Cloud 무료 서버 기준이고 Oracle Cloud 대안도 있습니다.
+- **내 PC(Windows):** [docs/PC.md](docs/PC.md). `scripts/windows/` 의 파일을 더블클릭하는 것만으로 설치·자동 시작·업데이트를 할 수 있습니다.
 
 로컬에서 빠르게 확인하려면:
 
