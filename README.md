@@ -103,7 +103,7 @@
 ## 설치
 
 - **클라우드 서버:** [docs/DEPLOY.md](docs/DEPLOY.md). Google Cloud 무료 서버 기준이고 Oracle Cloud 대안도 있습니다.
-- **내 PC(Windows):** [docs/PC.md](docs/PC.md). `scripts/windows/` 의 파일을 더블클릭하는 것만으로 설치·자동 시작·업데이트를 할 수 있습니다.
+- **내 PC(Windows):** [docs/PC.md](docs/PC.md). ZIP을 받아 **`install.bat`을 더블클릭하고 휴대폰에서 [시작]을 누르면 끝**입니다. 업데이트도 같은 방법입니다.
 
 로컬에서 빠르게 확인하려면:
 

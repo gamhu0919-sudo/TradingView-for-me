@@ -21,6 +21,27 @@ def load_dotenv(path: str | Path = ".env") -> None:
         os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
+def save_env_value(path: str | Path, key: str, value: str) -> bool:
+    """.env 의 key 값을 바꾸거나 추가한다. 다른 줄은 그대로 둔다. 쓰기 실패 시 False."""
+    p = Path(path)
+    try:
+        lines = p.read_text(encoding="utf-8-sig").splitlines() if p.is_file() else []
+        out, found = [], False
+        for line in lines:
+            if line.strip().startswith(f"{key}="):
+                out.append(f"{key}={value}")
+                found = True
+            else:
+                out.append(line)
+        if not found:
+            out.append(f"{key}={value}")
+        p.write_text("\n".join(out) + "\n", encoding="utf-8")
+    except OSError:
+        return False
+    os.environ[key] = value
+    return True
+
+
 def _parse_bool(value: str | None, default: bool) -> bool:
     if value is None or value == "":
         return default

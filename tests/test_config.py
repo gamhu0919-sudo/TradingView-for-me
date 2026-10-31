@@ -24,3 +24,17 @@ def test_single_instance_lock(tmp_path):
         acquire_single_instance_lock(tmp_path / "bot.lock")
     first.close()
     acquire_single_instance_lock(tmp_path / "bot.lock").close()  # 해제 후 다시 잡을 수 있음
+
+
+def test_save_env_value_replaces_or_appends(tmp_path, monkeypatch):
+    from bot.config import save_env_value
+
+    env = tmp_path / ".env"
+    env.write_text("# 설정\nTELEGRAM_BOT_TOKEN=abc\nTELEGRAM_CHAT_ID=\n", encoding="utf-8")
+    monkeypatch.delenv("TELEGRAM_CHAT_ID", raising=False)
+    assert save_env_value(env, "TELEGRAM_CHAT_ID", "777")
+    assert env.read_text(encoding="utf-8") == "# 설정\nTELEGRAM_BOT_TOKEN=abc\nTELEGRAM_CHAT_ID=777\n"
+    assert os.environ["TELEGRAM_CHAT_ID"] == "777"
+    assert save_env_value(env, "NEW_KEY", "1")
+    assert env.read_text(encoding="utf-8").endswith("NEW_KEY=1\n")
+    assert not save_env_value(tmp_path / "missing_dir" / ".env", "K", "v")
