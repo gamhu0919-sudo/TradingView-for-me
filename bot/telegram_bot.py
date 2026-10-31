@@ -566,7 +566,16 @@ def build_application(settings: Settings) -> Application:
         await data.aclose()
         store.close()
 
-    app = ApplicationBuilder().token(settings.bot_token).post_init(post_init).post_shutdown(post_shutdown).build()
+    # 기본 대기시간(5초)은 느린 가정용 회선에서 텔레그램 연결이 시간 초과로 끝날 수 있어 넉넉히 늘린다
+    app = (
+        ApplicationBuilder()
+        .token(settings.bot_token)
+        .connect_timeout(20).read_timeout(30).write_timeout(30).pool_timeout(10)
+        .get_updates_connect_timeout(20).get_updates_read_timeout(40)
+        .post_init(post_init)
+        .post_shutdown(post_shutdown)
+        .build()
+    )
 
     if settings.chat_id is None:
         log.warning("TELEGRAM_CHAT_ID 미설정: 설정 모드로 실행합니다. 봇에게 /start 를 보내세요.")

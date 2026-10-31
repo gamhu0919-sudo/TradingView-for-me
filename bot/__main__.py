@@ -109,7 +109,8 @@ def main() -> None:
     from .telegram_bot import build_application
 
     try:
-        build_application(settings).run_polling(allowed_updates=["message", "callback_query"])
+        # bootstrap_retries=-1: 시작할 때 텔레그램 연결에 실패해도 종료하지 않고 계속 재시도
+        build_application(settings).run_polling(allowed_updates=["message", "callback_query"], bootstrap_retries=-1)
     finally:
         lock.close()
 
